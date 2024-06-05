@@ -8,7 +8,7 @@ export class Settings extends Model<Settings> {
     primaryKey: true,
     type: DataType.INTEGER,
   })
-  id: number | undefined;
+  id: number;
 
   @Column({
     type: DataType.STRING,

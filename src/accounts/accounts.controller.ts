@@ -1,9 +1,9 @@
 import {
   Body,
+  ConflictException,
   Controller,
-  HttpStatus,
+  InternalServerErrorException,
   Post,
-  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -17,10 +17,8 @@ export class AccountsController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  async accounts(@Body() accountsDTO: AccountsDTO) {
-    console.log(accountsDTO);
-
-    this.accountsService.createAccounts(accountsDTO);
+  async postAccounts(@Body() accountsDTO: AccountsDTO) {
+    await this.accountsService.createAccounts(accountsDTO);
 
     return {
       message: 'successfully created accounts!',

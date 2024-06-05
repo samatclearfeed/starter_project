@@ -8,7 +8,7 @@ export class Account extends Model<Account> {
     primaryKey: true,
     type: DataType.INTEGER,
   })
-  id: number | undefined;
+  id: number;
 
   @Column({
     type: DataType.STRING,

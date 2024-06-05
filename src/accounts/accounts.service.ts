@@ -10,13 +10,12 @@ export class AccountsService {
     private accountModel: typeof Account,
   ) {}
 
-  async createAccounts(accountsDTO: AccountsDTO) {
-    const account = new Account();
-    account.name = accountsDTO.name;
-
-    return account.save().catch((error) => {
+  async createAccounts(accountsDTO: AccountsDTO): Promise<Account> {
+    // return: account promise after creation of the account.
+    return this.accountModel.create(accountsDTO).catch((error) => {
+      // customError: for mentioning what went wrong.
       if (error.name === 'SequelizeUniqueConstraintError') {
-        throw new ConflictException('User already exists');
+        throw new ConflictException('Account already exists');
       }
       throw error;
     });

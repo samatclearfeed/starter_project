@@ -13,61 +13,52 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth.guard';
-import { isStringNumber } from './setting.helper';
-import { SettingsDTO } from './settings.dto';
+import { settingsDto } from './settings.dto';
 import { SettingsService } from './settings.service';
 
-@Controller('accounts/:accountid/settings')
+@Controller('accounts/:accountId/settings')
 @UseGuards(AuthGuard)
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
   @Get()
-  async getSettings(@Param('accountid') accountid: number) {
-    return await this.settingsService
-      .getSettings(accountid)
-      .then((settings) => {
-        return { message: 'settings fetched successfully!', settings };
-      });
+  async getSettings(@Param('accountId') accountId: number) {
+    const settings = await this.settingsService.getSettings(accountId);
+
+    return { message: 'settings fetched successfully!', settings };
   }
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
   async postSettings(
-    @Param('accountid') accountid: number,
-    @Body() settingsDTO: SettingsDTO,
+    @Param('accountId') accountId: number,
+    @Body() settingsDTO: settingsDto,
   ) {
-    return this.settingsService
-      .createSettings(settingsDTO, accountid)
-      .then(() => {
-        return { message: 'successfully created settings!' };
-      });
+    await this.settingsService.createSettings(settingsDTO, accountId);
+
+    return { message: 'successfully created settings!' };
   }
 
-  @Patch(':id')
+  @Patch(':settingId')
   @UsePipes(new ValidationPipe({ transform: true }))
   async patchSettings(
-    @Param('accountid') accountid: number,
-    @Param('id') settingid: number,
-    @Body() settingsDTO: SettingsDTO,
+    @Param('accountId') accountId: number,
+    @Param('settingId') settingId: number,
+    @Body() settingsDTO: settingsDto,
   ) {
-    return await this.settingsService
-      .patchSettings(settingsDTO, accountid, settingid)
-      .then(() => {
-        return { message: 'settings updated successfully!' };
-      });
+    await this.settingsService.patchSettings(settingsDTO, accountId, settingId);
+
+    return { message: 'settings updated successfully!' };
   }
 
-  @Delete(':id')
+  @Delete(':settingId')
   @UsePipes(new ValidationPipe({ transform: true }))
   async deleteSettings(
-    @Param('accountid') accountid: number,
-    @Param('id') settingid: number,
+    @Param('accountId') accountId: number,
+    @Param('settingId') settingId: number,
   ) {
-    return await this.settingsService
-      .deleteSettings(accountid, settingid)
-      .then(() => {
-        return { message: 'settings deleted successfully!' };
-      });
+    await this.settingsService.deleteSettings(accountId, settingId);
+
+    return { message: 'settings deleted successfully!' };
   }
 }
